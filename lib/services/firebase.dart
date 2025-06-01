@@ -1,14 +1,11 @@
+// services/firebase.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreService {
-  final CollectionReference ticket = FirebaseFirestore.instance.collection(
-    'ticket',
-  );
+  final CollectionReference ticketsCollection = FirebaseFirestore.instance.collection("TicketingApp");
 
   Stream<QuerySnapshot> getTickets() {
-    return ticket.snapshots();
-  }
-  Future<DocumentSnapshot> getTicketById(String id) {
-    return ticket.doc(id).get();
+    final streamTickets = ticketsCollection.orderBy("tanggal", descending: true).snapshots();
+    return streamTickets;
   }
 }
