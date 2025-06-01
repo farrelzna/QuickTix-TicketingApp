@@ -24,17 +24,16 @@ class _PurchasePageState extends State<PurchasePage> {
         title: Text(
           'Ticketing App',
           style: GoogleFonts.poppins(
-            color: Colors.black,
-            fontWeight: FontWeight.w600, // Weight 600
-            fontSize: 18,              // Size 18px
-            height: 1,                 // Line height 100%
-            letterSpacing: -0.95,      // Letter spacing -0.95px
+            color: Colors.black, // Warna teks AppBar
+            fontWeight: FontWeight.bold, // Membuat teks lebih tebal
+            fontSize: 20, // Sedikit memperbesar font size
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[50], // Warna latar AppBar sedikit abu-abu
         centerTitle: true,
-        elevation: 0,
+        elevation: 0, // Menghilangkan shadow AppBar
       ),
+      backgroundColor: Colors.grey[100], // Warna latar belakang body
       body: StreamBuilder<QuerySnapshot>(
         stream: firestoreService.getTickets(),
         builder: (context, snapshot) {
@@ -80,7 +79,6 @@ class _PurchasePageState extends State<PurchasePage> {
                 final String namaTiket = data['nama_tiket'] ?? 'Nama Tiket Tidak Ada';
                 final String kategori = data['kategori'] ?? 'Kategori Tidak Ada';
                 
-                // --- Perubahan untuk penanganan harga (solusi TypeError sebelumnya) ---
                 int harga;
                 dynamic rawHarga = data['harga']; 
 
@@ -97,106 +95,93 @@ class _PurchasePageState extends State<PurchasePage> {
                   print("Tipe data harga tidak dikenal: $rawHarga. Defaulting to 0.");
                   harga = 0;
                 }
-                // --- Akhir perubahan penanganan harga ---
 
-                // --- Pengambilan data tanggal dari Firestore ---
                 final dynamic rawTanggal = data['tanggal'];
                 DateTime tanggal;
 
                 if (rawTanggal is Timestamp) {
-                  tanggal = rawTanggal.toDate(); // Konversi Timestamp ke DateTime
+                  tanggal = rawTanggal.toDate();
                 } else {
                   print("Warning: 'tanggal' field is missing or not a Timestamp. Using current date.");
-                  tanggal = DateTime.now(); // Default ke tanggal sekarang jika tidak ada
+                  tanggal = DateTime.now();
                 }
-                // --- Akhir pengambilan data tanggal ---
-
 
                 return Card(
-                  elevation: 3,
-                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  elevation: 1, // Mengurangi shadow card
+                  margin: const EdgeInsets.only(bottom: 16), // Jarak antar card
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16), // Radius 16px
+                    borderRadius: BorderRadius.circular(12), // Radius border card
                   ),
-                  child: SizedBox( // Mengatur ukuran Card secara eksplisit
-                    width: 358,    // Width 358px
-                    height: 112,   // Height 112px
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded( // Menggunakan Expanded untuk kolom teks agar mengambil sisa ruang
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center, // Pusatkan secara vertikal
-                              children: [
-                                // Nama Tiket
-                                Text(
-                                  namaTiket,
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 18,
-                                  ),
-                                  overflow: TextOverflow.ellipsis, // Mencegah overflow
-                                  maxLines: 1,
+                  color: Colors.white, // Warna card putih
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center, // Align items vertically center
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center, 
+                            children: [
+                              Text(
+                                namaTiket,
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w600, // Font weight semi-bold
+                                  fontSize: 16, // Ukuran font nama tiket
+                                  color: Colors.black87,
                                 ),
-                                const SizedBox(height: 4),
-                                // Kategori (VIP/Reguler)
-                                Text(
-                                  kategori,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                  ),
-                                  overflow: TextOverflow.ellipsis, // Mencegah overflow
-                                  maxLines: 1,
-                                ),
-                                const SizedBox(height: 8),
-                                // Harga
-                                Text(
-                                  'Rp. ${harga.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16,
-                                    height: 1, // Line height 100%
-                                    letterSpacing: 0, // Letter spacing 0%
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Tombol "Beli"
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              // --- Perubahan untuk Navigasi ke PaymentPage ---
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => PaymentPage(
-                                    namaTiket: namaTiket,
-                                    kategori: kategori,
-                                    harga: harga,
-                                    tanggal: tanggal
-                                  ),
-                                ),
-                              );
-                              // --- Akhir perubahan Navigasi ---
-                            },
-                            icon: const Icon(Icons.shopping_cart, size: 18),
-                            label: const Text('Beli'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
                               ),
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                            ),
+                              const SizedBox(height: 2), // Jarak kecil antara nama dan kategori
+                              Text(
+                                kategori,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 12, // Ukuran font kategori
+                                  color: Colors.grey[600], // Warna font kategori
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                              const SizedBox(height: 6), // Jarak antara kategori dan harga
+                              Text(
+                                'Rp. ${harga.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.bold, // Font weight bold untuk harga
+                                  fontSize: 16, // Ukuran font harga
+                                  color: const Color(0xFF2563EB), // Warna harga biru
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PaymentPage(
+                                  namaTiket: namaTiket,
+                                  kategori: kategori,
+                                  harga: harga,
+                                  tanggal: tanggal
+                                ),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.shopping_cart, size: 16, color: Colors.white), // Warna ikon putih
+                          label: Text('Beli', style: GoogleFonts.poppins(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w500)), // Teks tombol
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF2563EB), // Warna tombol biru
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), // Padding tombol
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8), // Radius border tombol
+                            ),
+                            elevation: 0, // Menghilangkan shadow tombol
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 );

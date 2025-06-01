@@ -39,7 +39,7 @@ class OnboardingPage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 40),
+              const SizedBox(height: 40), // Jarak atas gambar
               Center(
                 child: Image.asset(
                   'assets/img/onboarding.png', // Pastikan ini benar
@@ -48,7 +48,7 @@ class OnboardingPage extends StatelessWidget {
                   fit: BoxFit.contain,
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 20), // Mengurangi jarak antara gambar dan boks konten
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Container(
@@ -59,8 +59,8 @@ class OnboardingPage extends StatelessWidget {
                     boxShadow: const [
                       BoxShadow(
                         color: Colors.black12,
-                        blurRadius: 10,
-                        offset: Offset(0, 2),
+                        // blurRadius: 10,
+                        offset: Offset(0, 1),
                       ),
                     ],
                   ),
@@ -74,7 +74,7 @@ class OnboardingPage extends StatelessWidget {
                           color: Colors.black87,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8), // Mengurangi jarak antara judul dan deskripsi
                       Text(
                         'Membantu anda untuk managemen pembelian Tiket agar lebih efisien',
                         textAlign: TextAlign.center,
@@ -86,7 +86,7 @@ class OnboardingPage extends StatelessWidget {
                           color: Colors.black54,
                         ),
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 30), // Menambah jarak antara deskripsi dan tombol
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -99,7 +99,7 @@ class OnboardingPage extends StatelessWidget {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 0, 17, 255),
+                            backgroundColor: const Color(0xFF2563EB), // Warna tombol diubah
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
@@ -115,7 +115,7 @@ class OnboardingPage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 40), // Jarak bawah konten
             ],
           ),
         ),

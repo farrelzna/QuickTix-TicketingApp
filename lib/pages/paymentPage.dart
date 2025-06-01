@@ -482,7 +482,7 @@ class PaymentPage extends StatelessWidget {
                   ),
                   padding: const EdgeInsets.all(16),
                   child: Image.asset(
-                    'assets/img/credit_card.png',
+                    'assets/img/credit-card.png',
                     width: 135,
                     height: 135,
                   ),
