@@ -42,7 +42,7 @@ class OnboardingPage extends StatelessWidget {
               const SizedBox(height: 40), // Jarak atas gambar
               Center(
                 child: Image.asset(
-                  'assets/img/onboarding.png', // Pastikan ini benar
+                  'assets/img/onboarding.png', 
                   width: 230,
                   height: 331,
                   fit: BoxFit.contain,

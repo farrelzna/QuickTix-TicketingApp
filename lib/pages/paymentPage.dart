@@ -20,8 +20,18 @@ class PaymentPage extends StatelessWidget {
 
   String _formatDate(DateTime date) {
     final Map<int, String> monthNames = {
-      1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'Mei', 6: 'Jun',
-      7: 'Jul', 8: 'Agu', 9: 'Sep', 10: 'Okt', 11: 'Nov', 12: 'Des',
+      1: 'Jan',
+      2: 'Feb',
+      3: 'Mar',
+      4: 'Apr',
+      5: 'Mei',
+      6: 'Jun',
+      7: 'Jul',
+      8: 'Agu',
+      9: 'Sep',
+      10: 'Okt',
+      11: 'Nov',
+      12: 'Des',
     };
     return '${date.day} ${monthNames[date.month]} ${date.year}';
   }
@@ -33,10 +43,11 @@ class PaymentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
+      backgroundColor: Colors.grey[100], // Warna latar belakang utama
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back,
+              color: Color(0xFF1F2937)), // Warna ikon back
           onPressed: () {
             Navigator.pop(context);
           },
@@ -44,35 +55,34 @@ class PaymentPage extends StatelessWidget {
         title: Text(
           'Pembayaran',
           style: GoogleFonts.poppins(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
+            color: const Color(0xFF1F2937), // Warna teks title
+            fontWeight: FontWeight.w600, // Semi-bold
             fontSize: 18,
-            height: 1,
-            letterSpacing: -0.95,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[50], // Warna AppBar sama dengan body
         centerTitle: true,
-        elevation: 0,
+        elevation: 0, // Hilangkan shadow
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+        padding: const EdgeInsets.symmetric(
+            horizontal: 20.0, vertical: 20.0), // Padding disesuaikan
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Card Total Tagihan
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(20), // Padding dalam card
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12), // Radius border card
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.05),
-                    spreadRadius: 0,
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 8,
+                    offset: const Offset(0, 2), // Sedikit shadow
                   ),
                 ],
               ),
@@ -81,228 +91,224 @@ class PaymentPage extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      // Icon Total Tagihan
                       Container(
-                        width: 48,
-                        height: 48,
+                        width: 40, // Ukuran ikon container
+                        height: 40,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF0F5FF),
-                          borderRadius: BorderRadius.circular(12),
+                          color:
+                              const Color(0xFFE0E7FF), // Warna background ikon
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.receipt_long,
-                            color: Color(0xFF3468E7),
-                            size: 24,
+                        child: Center(
+                          child: Image.asset(
+                            'assets/icon/receipt_lon.png', // Menggunakan ikon dari assets
+                            width: 20, // Ukuran ikon
+                            height: 20,
+                            color: const Color(0xFF3730A3), // Warna ikon
                           ),
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(width: 12),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             'Total Tagihan',
                             style: GoogleFonts.poppins(
-                              fontSize: 14,
+                              fontSize: 12, // Ukuran font lebih kecil
                               fontWeight: FontWeight.w500,
-                              color: const Color(0xFF6B7280),
+                              color:
+                                  const Color(0xFF6B7280), // Warna teks abu-abu
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 2),
                           Text(
                             _formatCurrency(harga),
                             style: GoogleFonts.poppins(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black,
+                              fontSize: 20, // Ukuran font harga
+                              fontWeight: FontWeight.bold, // Bold
+                              color:
+                                  const Color(0xFF1F2937), // Warna teks hitam
                             ),
                           ),
                         ],
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Nama Pesanan',
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF6B7280),
-                        ),
-                      ),
-                      Text(
-                        '$namaTiket - $kategori',
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Tanggal',
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF6B7280),
-                        ),
-                      ),
-                      Text(
-                        _formatDate(tanggal),
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
+                  const SizedBox(height: 16), // Jarak antar elemen
+                  _buildInfoRow('Nama Pesanan', '$namaTiket - $kategori'),
+                  const SizedBox(height: 6),
+                  _buildInfoRow('Tanggal', _formatDate(tanggal)),
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 28), // Jarak antar section
 
             // Pilih Metode Pembayaran Section
             Text(
               'Pilih Metode Pembayaran',
               style: GoogleFonts.poppins(
-                fontSize: 16,
+                fontSize: 14, // Ukuran font section title
                 fontWeight: FontWeight.w600,
-                color: Colors.black,
+                color: const Color(0xFF4B5563), // Warna teks abu-abu gelap
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
 
             // Metode Pembayaran Options
             _buildPaymentOption(
               context: context,
               title: 'Tunai (Cash)',
-              icon: Icons.wallet,
-              iconColor: const Color(0xFF34A853),
+              iconPath: 'assets/icon/wallet.png', // Path ikon dari assets
               onTap: () {
                 _showCashPaymentDialog(context);
               },
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             _buildPaymentOption(
               context: context,
               title: 'Kartu Kredit',
-              icon: Icons.credit_card,
-              iconColor: const Color(0xFF4285F4),
+              iconPath: 'assets/icon/credit_card.png', // Path ikon dari assets
               onTap: () {
                 _showCreditCardPaymentDialog(context);
               },
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             _buildPaymentOption(
               context: context,
               title: 'QRIS / QR Pay',
-              icon: Icons.qr_code_2,
-              iconColor: const Color(0xFFEA4335),
+              iconPath: 'assets/icon/qr_code.png', // Path ikon dari assets
               onTap: () {
                 _showQrisPaymentPopup(context);
               },
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 28),
 
             // Punya Pertanyaan? Section
             Text(
               'Punya pertanyaan?',
               style: GoogleFonts.poppins(
-                fontSize: 14,
+                fontSize: 12, // Ukuran font lebih kecil
                 fontWeight: FontWeight.w500,
-                color: Colors.grey.shade700,
+                color: const Color(0xFF6B7280),
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 16, vertical: 12), // Padding disesuaikan
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.05),
-                    spreadRadius: 0,
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
                   ),
                 ],
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.help_outline, color: Color(0xFF3468E7), size: 24),
-                  const SizedBox(width: 12),
+                  Image.asset(
+                    'assets/icon/help_outline.png', // Menggunakan ikon dari assets
+                    width: 20, // Sesuaikan ukuran ikon jika perlu
+                    height: 20, // Sesuaikan ukuran ikon jika perlu
+                    color: const Color(0xFF3730A3), // Warna ikon
+                  ),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       'Hubungi Admin untuk bantuan pembayaran.',
                       style: GoogleFonts.poppins(
-                        fontSize: 14,
+                        fontSize: 12, // Ukuran font
                         fontWeight: FontWeight.w500,
-                        color: Colors.black87,
+                        color: const Color(0xFF374151), // Warna teks
                       ),
                     ),
                   ),
-                  const Icon(Icons.arrow_forward_ios, size: 16, color: Color(0xFF6B7280)),
+                  // Tidak ada ikon panah kanan lagi sesuai gambar
                 ],
               ),
             ),
+            const SizedBox(height: 20), // Padding bawah
           ],
         ),
       ),
     );
   }
 
+  Widget _buildInfoRow(String label, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.poppins(
+            fontSize: 12, // Ukuran font label
+            fontWeight: FontWeight.w500,
+            color: const Color(0xFF6B7280),
+          ),
+        ),
+        Text(
+          value,
+          style: GoogleFonts.poppins(
+            fontSize: 12, // Ukuran font value
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFF374151), // Warna teks value
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildPaymentOption({
     required BuildContext context,
     required String title,
-    required IconData icon,
-    required Color iconColor,
+    required String iconPath, // Menggunakan path ikon string
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
       child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+        padding: const EdgeInsets.symmetric(
+            horizontal: 16, vertical: 12), // Padding dalam opsi
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.05),
-              spreadRadius: 0,
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
         child: Row(
           children: [
-            Icon(icon, color: iconColor, size: 24),
-            const SizedBox(width: 16),
+            Image.asset(
+              iconPath, // Menggunakan Image.asset
+              width: 20, // Ukuran ikon
+              height: 20,
+              // Tidak perlu color tint jika ikon sudah berwarna sesuai
+            ),
+            const SizedBox(width: 12),
             Expanded(
               child: Text(
                 title,
                 style: GoogleFonts.poppins(
-                  fontSize: 16,
+                  fontSize: 14, // Ukuran font title opsi
                   fontWeight: FontWeight.w500,
-                  color: Colors.black87,
+                  color: const Color(0xFF1F2937),
                 ),
               ),
             ),
-            const Icon(Icons.arrow_forward_ios, size: 16, color: Color(0xFF6B7280)),
+            const Icon(Icons.arrow_forward_ios,
+                size: 14, color: Color(0xFF9CA3AF)), // Warna ikon panah
           ],
         ),
       ),
@@ -428,7 +434,8 @@ class PaymentPage extends StatelessWidget {
   }
 
   void _showCreditCardPaymentDialog(BuildContext context) {
-    final TextEditingController cardNumberController = TextEditingController(text: '8810 7766 1234 9876');
+    final TextEditingController cardNumberController =
+        TextEditingController(text: '8810 7766 1234 9876');
 
     showDialog(
       context: context,
@@ -489,7 +496,8 @@ class PaymentPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
                     color: const Color(0xFFF0F5FF),
                     borderRadius: BorderRadius.circular(8),
@@ -515,9 +523,11 @@ class PaymentPage extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Clipboard.setData(ClipboardData(text: cardNumberController.text));
+                          Clipboard.setData(
+                              ClipboardData(text: cardNumberController.text));
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Nomor Kartu Kredit Disalin!')),
+                            const SnackBar(
+                                content: Text('Nomor Kartu Kredit Disalin!')),
                           );
                         },
                         child: Text(
@@ -600,10 +610,12 @@ class PaymentPage extends StatelessWidget {
       builder: (BuildContext dialogContext) {
         return Dialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius:
+                BorderRadius.circular(16.0), // Rounded corners for the dialog
           ),
+          backgroundColor: Colors.white,
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(24.0), // Adjusted padding
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -615,57 +627,76 @@ class PaymentPage extends StatelessWidget {
                       style: GoogleFonts.poppins(
                         fontSize: 18.0,
                         fontWeight: FontWeight.w600,
-                        color: Colors.black,
+                        color: const Color(0xFF2563EB), // Blue color for title
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.close, color: Colors.grey[600]),
+                      icon: Icon(Icons.close,
+                          color: Colors.grey[400]), // Lighter close icon
                       onPressed: () {
                         Navigator.of(dialogContext).pop();
                       },
                     ),
                   ],
                 ),
-                SizedBox(height: 20.0),
-                QrImageView(
-                  data: 'https://gopay.co.id/merchant/qris',
-                  version: QrVersions.auto,
-                  size: 200.0,
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
-                  errorStateBuilder: (cxt, err) {
-                    return Container(
-                      width: 200.0,
-                      height: 200.0,
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Oops! Gagal memuat QR Code.',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(color: Colors.red),
+                const SizedBox(height: 24.0),
+                Container(
+                  padding: const EdgeInsets.all(8.0), // Padding around QR code
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset:
+                            const Offset(0, 3), // changes position of shadow
                       ),
-                    );
-                  },
+                    ],
+                  ),
+                  child: QrImageView(
+                    data:
+                        'https://gopay.co.id/merchant/qris', // Example QR data
+                    version: QrVersions.auto,
+                    size: 180.0, // Adjusted size
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    errorStateBuilder: (cxt, err) {
+                      return Container(
+                        width: 180.0,
+                        height: 180.0,
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Oops! Gagal memuat QR Code.',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                              color: Colors.red, fontSize: 12),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 24.0),
                 Text(
                   'Scan QR untuk Membayar',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
                     fontSize: 16.0,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
+                    fontWeight: FontWeight.bold, // Bold text
+                    color: Colors.black87, // Darker text
                   ),
                 ),
-                SizedBox(height: 10.0),
+                const SizedBox(height: 8.0),
                 Text(
                   'Gunakan aplikasi e-wallet atau mobile banking untuk scan QR di atas dan selesaikan pembayaran',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
-                    fontSize: 14.0,
-                    color: Colors.grey[600],
+                    fontSize: 12.0, // Smaller font size
+                    color: Colors.grey[600], // Lighter grey for description
                   ),
                 ),
-                SizedBox(height: 30.0),
+                const SizedBox(height: 32.0),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -684,16 +715,21 @@ class PaymentPage extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF3468E7),
+                      backgroundColor:
+                          const Color(0xFF2563EB), // Blue button color
                       foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(vertical: 15.0),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16.0), // Adjusted padding
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
+                        borderRadius:
+                            BorderRadius.circular(12.0), // More rounded corners
                       ),
+                      elevation: 0, // No shadow for a flatter look if desired
                     ),
                     child: Text(
                       'Konfirmasi Pembayaran',
-                      style: GoogleFonts.poppins(fontSize: 16.0, fontWeight: FontWeight.w600),
+                      style: GoogleFonts.poppins(
+                          fontSize: 16.0, fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
