@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ticketingapp/firebase_options.dart';
-import 'pages/purchasePage.dart'; // Buat file ini di folder 'pages'
+import 'pages/purchase_page.dart'; // Buat file ini di folder 'pages'
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

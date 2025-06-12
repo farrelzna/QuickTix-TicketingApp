@@ -2,8 +2,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ticketingapp/services/firebase.dart';
-import 'package:google_fonts/google_fonts.dart'; // Pastikan ini diimport
-import 'package:ticketingapp/pages/paymentPage.dart'; // Import halaman pembayaran yang baru dibuat
+import 'package:google_fonts/google_fonts.dart';
+import 'package:ticketingapp/pages/payment_page.dart';
+import 'package:ticketingapp/pages/purchase_history_page.dart';
 
 class PurchasePage extends StatefulWidget {
   const PurchasePage({super.key});
@@ -32,6 +33,20 @@ class _PurchasePageState extends State<PurchasePage> {
         backgroundColor: Colors.grey[50], // Warna latar AppBar sedikit abu-abu
         centerTitle: true,
         elevation: 0, // Menghilangkan shadow AppBar
+        actions: [
+          // Add history button
+          IconButton(
+            icon: const Icon(Icons.history, color: Color(0xFF1F2937)),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PurchaseHistoryPage(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       backgroundColor: Colors.grey[100], // Warna latar belakang body
       body: StreamBuilder<QuerySnapshot>(

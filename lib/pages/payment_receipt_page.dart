@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
+import 'dart:typed_data';
 
-class PaymentReceiptPage extends StatefulWidget {
+class PaymentReceiptPage extends StatelessWidget {
   final String nama_tiket;
   final String kategori;
   final int harga;
@@ -15,28 +19,176 @@ class PaymentReceiptPage extends StatefulWidget {
     required this.tanggal,
   });
 
-  @override
-  State<PaymentReceiptPage> createState() => _ReceiptPageState();
-}
-
-class _ReceiptPageState extends State<PaymentReceiptPage> {
-  bool _showNotif = false;
-
   String _formatCurrency(int amount) {
     return 'Rp ${amount.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
   }
 
-  void _showDownloadAlert() {
-    setState(() {
-      _showNotif = true;
-    });
-    Future.delayed(const Duration(seconds: 5), () {
-      if (mounted) {
-        setState(() {
-          _showNotif = false;
-        });
-      }
-    });
+  Future<Uint8List> _generatePdf(PdfPageFormat format) async {
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+        pageFormat: format,
+        build: (context) {
+          return pw.Container(
+            padding: const pw.EdgeInsets.all(24),
+            decoration: pw.BoxDecoration(
+              color: PdfColors.white,
+              borderRadius: pw.BorderRadius.circular(16),
+            ),
+            child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              children: [
+                // Checkmark Circle
+                pw.Container(
+                  width: 60,
+                  height: 60,
+                  decoration: pw.BoxDecoration(
+                    shape: pw.BoxShape.circle,
+                    color: PdfColor.fromHex('E7F0FF'),
+                  ),
+                  child: pw.Center(
+                    child: pw.Text(
+                      '✓',
+                      style: pw.TextStyle(
+                        color: PdfColor.fromHex('3468E7'),
+                        fontSize: 30,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+
+                pw.SizedBox(height: 20),
+
+                // Status Text
+                pw.Text(
+                  'Pembayaran Berhasil',
+                  style: pw.TextStyle(
+                    fontSize: 18,
+                    fontWeight: pw.FontWeight.bold,
+                    color: PdfColors.black,
+                  ),
+                ),
+
+                pw.SizedBox(height: 10),
+
+                // Description
+                pw.Text(
+                  'Transaksi kamu telah selesai. Detail pembelian ada di bawah ini.',
+                  textAlign: pw.TextAlign.center,
+                  style: const pw.TextStyle(
+                    fontSize: 14,
+                    color: PdfColors.grey700,
+                  ),
+                ),
+
+                pw.SizedBox(height: 20),
+
+                // Blue Detail Box
+                pw.Container(
+                  width: double.infinity,
+                  padding: const pw.EdgeInsets.all(12),
+                  decoration: pw.BoxDecoration(
+                    color: PdfColor.fromHex('E7F0FF'),
+                    borderRadius: pw.BorderRadius.circular(8),
+                  ),
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Text(
+                                nama_tiket,
+                                style: pw.TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: pw.FontWeight.bold,
+                                ),
+                              ),
+                              pw.SizedBox(height: 2),
+                              pw.Text(
+                                kategori,
+                                style: const pw.TextStyle(
+                                  fontSize: 14,
+                                  color: PdfColors.grey700,
+                                ),
+                              ),
+                            ],
+                          ),
+                          pw.Text(
+                            _formatCurrency(harga),
+                            style: pw.TextStyle(
+                              fontSize: 14,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      pw.SizedBox(height: 12),
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        children: [
+                          pw.Text(
+                            'Total Pembayaran',
+                            style: pw.TextStyle(
+                              fontSize: 14,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
+                          ),
+                          pw.Text(
+                            _formatCurrency(harga),
+                            style: pw.TextStyle(
+                              fontSize: 16,
+                              fontWeight: pw.FontWeight.bold,
+                              color: PdfColor.fromHex('3468E7'),
+                            ),
+                          ),
+                        ],
+                      ),
+                      pw.SizedBox(height: 8),
+                      pw.Container(
+                        height: 1,
+                        width: double.infinity,
+                        color: PdfColor.fromHex('BDBDBD'),
+                      ),
+                    ],
+                  ),
+                ),
+
+                pw.SizedBox(height: 20),                // Footer
+                pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.center,
+                  children: [
+                    pw.Text(
+                      'No. TIX${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}',
+                      style: const pw.TextStyle(
+                        fontSize: 12,
+                        color: PdfColors.grey600,
+                      ),
+                    ),
+                    pw.SizedBox(height: 4),
+                    pw.Text(
+                      'Generated on ${DateTime.now().toString().split('.')[0]}',
+                      style: const pw.TextStyle(
+                        fontSize: 10,
+                        color: PdfColors.grey400,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+
+    return pdf.save();
   }
 
   @override
@@ -67,34 +219,6 @@ class _ReceiptPageState extends State<PaymentReceiptPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Notifikasi sukses (muncul di atas)
-            if (_showNotif)
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(12),
-                margin: const EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  color: Colors.green[50],
-                  border: Border.all(color: Colors.green),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.check_circle, color: Colors.green),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'Bukti pembayaran berhasil diunduh!',
-                        style: GoogleFonts.poppins(
-                          color: Colors.green,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            // Kartu bukti pembayaran
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(24),
@@ -158,7 +282,6 @@ class _ReceiptPageState extends State<PaymentReceiptPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Nama tiket & tipe tiket di kiri, harga di kanan
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,7 +290,7 @@ class _ReceiptPageState extends State<PaymentReceiptPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  widget.nama_tiket,
+                                  nama_tiket,
                                   style: GoogleFonts.poppins(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -176,7 +299,7 @@ class _ReceiptPageState extends State<PaymentReceiptPage> {
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  widget.kategori,
+                                  kategori,
                                   style: GoogleFonts.poppins(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
@@ -186,7 +309,7 @@ class _ReceiptPageState extends State<PaymentReceiptPage> {
                               ],
                             ),
                             Text(
-                              _formatCurrency(widget.harga),
+                              _formatCurrency(harga),
                               style: GoogleFonts.poppins(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -196,7 +319,6 @@ class _ReceiptPageState extends State<PaymentReceiptPage> {
                           ],
                         ),
                         const SizedBox(height: 12),
-                        // Total pembayaran
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -209,7 +331,7 @@ class _ReceiptPageState extends State<PaymentReceiptPage> {
                               ),
                             ),
                             Text(
-                              _formatCurrency(widget.harga),
+                              _formatCurrency(harga),
                               style: GoogleFonts.poppins(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -253,7 +375,10 @@ class _ReceiptPageState extends State<PaymentReceiptPage> {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          _showDownloadAlert();
+                          // Show PDF preview dialog
+                          Printing.layoutPdf(
+                            onLayout: (format) => _generatePdf(format),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF3468E7),

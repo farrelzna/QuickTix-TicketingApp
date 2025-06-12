@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart'; // Import untuk Clipboard
 import 'package:qr_flutter/qr_flutter.dart'; // Import untuk QRIS
-import 'paymentReceiptPage.dart'; // Import ReceiptPage
+import 'payment_receipt_page.dart'; // Import ReceiptPage
+import '../services/firebase.dart'; // Import FirestoreService
 
 class PaymentPage extends StatelessWidget {
   final String namaTiket;
   final String kategori;
   final int harga;
   final DateTime tanggal;
-
-  const PaymentPage({
+  final FirestoreService firestoreService = FirestoreService();
+  PaymentPage({
     super.key,
     required this.namaTiket,
     required this.kategori,
@@ -315,6 +316,44 @@ class PaymentPage extends StatelessWidget {
     );
   }
 
+  void _navigateToReceiptPage(
+      BuildContext context, String paymentMethod) async {
+    try {
+      // Save purchase data to Firebase
+      await firestoreService.createPurchase(
+        namaTiket: namaTiket,
+        kategori: kategori,
+        harga: harga,
+        tanggal: tanggal,
+        paymentMethod: paymentMethod,
+      );
+
+      // Navigate to receipt page after successful save
+      if (context.mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PaymentReceiptPage(
+              nama_tiket: namaTiket,
+              kategori: kategori,
+              harga: harga,
+              tanggal: tanggal,
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Gagal menyimpan data pembelian: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   void _showCashPaymentDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -397,17 +436,7 @@ class PaymentPage extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(dialogContext).pop();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PaymentReceiptPage(
-                          nama_tiket: namaTiket,
-                          kategori: kategori,
-                          harga: harga,
-                          tanggal: tanggal,
-                        ),
-                      ),
-                    );
+                    _navigateToReceiptPage(context, 'cash');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF3468E7),
@@ -568,17 +597,7 @@ class PaymentPage extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(dialogContext).pop();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PaymentReceiptPage(
-                          nama_tiket: namaTiket,
-                          kategori: kategori,
-                          harga: harga,
-                          tanggal: tanggal,
-                        ),
-                      ),
-                    );
+                    _navigateToReceiptPage(context, 'credit_card');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF3468E7),
@@ -702,17 +721,7 @@ class PaymentPage extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.of(dialogContext).pop();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PaymentReceiptPage(
-                            nama_tiket: namaTiket,
-                            kategori: kategori,
-                            harga: harga,
-                            tanggal: tanggal,
-                          ),
-                        ),
-                      );
+                      _navigateToReceiptPage(context, 'qris');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor:
